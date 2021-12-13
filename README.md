@@ -30,6 +30,41 @@ Due to parsec removing previous builds from their servers with each new release;
 
 To do this simply edit the default.nix file - updating the url as appropriate. see [here](https://github.com/DarthPJB/parsec-gaming-nix/blob/6610278873cef9371b338788c06cb0b53d860b25/default.nix#L9), and [here](https://github.com/DarthPJB/parsec-gaming-nix/blob/6610278873cef9371b338788c06cb0b53d860b25/default.nix#L23);
 
+## Trouble Shooting
+If you having trouble getting hardware accelration to work 
+```
+libva info: VA-API version 1.13.0
+libva info: Trying to open /run/opengl-driver/lib/dri/nvidia_drv_video.so
+libva info: Trying to open /usr/lib/dri/nvidia_drv_video.so
+libva info: Trying to open /usr/lib32/dri/nvidia_drv_video.so
+libva info: Trying to open /usr/lib/x86_64-linux-gnu/dri/nvidia_drv_video.so
+libva info: Trying to open /usr/lib/i386-linux-gnu/dri/nvidia_drv_video.so
+libva info: va_openDriver() returns -1
+libva info: VA-API version 1.13.0
+libva info: User environment variable requested driver 'vdpau'
+libva info: Trying to open /run/opengl-driver/lib/dri/vdpau_drv_video.so
+libva info: Trying to open /usr/lib/dri/vdpau_drv_video.so
+libva info: Trying to open /usr/lib32/dri/vdpau_drv_video.so
+libva info: Trying to open /usr/lib/x86_64-linux-gnu/dri/vdpau_drv_video.so
+libva info: Trying to open /usr/lib/i386-linux-gnu/dri/vdpau_drv_video.so
+libva info: va_openDriver() returns -1
+```
+add
+
+`hardware.opengl.extraPackages = [ pkgs.vaapiVdpau ];`
+
+to your configuration.nix
+
+test with 
+`nix-shell -p libva-utils --run vainfo`
+
+
+more information here
+https://nixos.wiki/wiki/Accelerated_Video_Playback
+
+
+
+
 # Important reminder.
 You should fork this, use this, and make use of this in any way you want - please don't rely on me to maintain it (although I will do my best to do so).
 
