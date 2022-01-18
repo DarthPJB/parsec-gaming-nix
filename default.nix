@@ -52,7 +52,7 @@ stdenv.mkDerivation {
     #! /bin/sh
     mkdir -p \$HOME/.parsec
     ln -sf $out/libexec/skel/* \$HOME/.parsec
-    exec $out/libexec/parsecd
+    exec $out/libexec/parsecd "\$@"
     EOF
     chmod +x $out/bin/parsecd
   '';
