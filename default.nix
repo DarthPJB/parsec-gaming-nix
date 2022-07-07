@@ -7,7 +7,7 @@ stdenv.mkDerivation {
 
   src = fetchurl {
     url = "https://builds.parsecgaming.com/package/parsec-linux.deb";
-    sha256 = "1hfdzjd8qiksv336m4s4ban004vhv00cv2j461gc6zrp37s0fwhc";
+    sha256 = "12b796rzw1qk5xfi8gq3gx4g50awwkjszd037is85s6jxgs5pkvj";
   };
 
   # The upstream deb package is out of date and doesn't work out of the box
@@ -15,7 +15,7 @@ stdenv.mkDerivation {
   # because it doesn't patchelf the dynamic dependencies. Instead, "manually"
   # fetch the latest binaries.
   latest_appdata = fetchurl {
-    url = "https://builds.parsecgaming.com/channel/release/appdata/linux/latest";
+    url = "ssh ";
     sha256 = "0sp0g932kg1lp1gyw3vg1ax7pndi2lg3zsg2kx3lsnldgg10k14j";
   };
   latest_parsecd_so = fetchurl {
