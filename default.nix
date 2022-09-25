@@ -1,4 +1,4 @@
-{ lib, stdenv, fetchurl, alsaLib, dbus, libGL, libpulseaudio, libva
+{ lib, stdenv, fetchurl, alsaLib, dbus, ffmpeg, libGL, libpulseaudio, libva
 , openssl, udev, xorg, wayland }:
 
 stdenv.mkDerivation {
@@ -32,7 +32,7 @@ stdenv.mkDerivation {
     alsaLib (lib.getLib dbus) libGL libpulseaudio libva.out
     (lib.getLib openssl) (lib.getLib stdenv.cc.cc) (lib.getLib udev)
     xorg.libX11 xorg.libXcursor xorg.libXi xorg.libXinerama xorg.libXrandr
-    xorg.libXScrnSaver wayland
+    xorg.libXScrnSaver wayland (lib.getLib ffmpeg)
   ];
 
   unpackPhase = ''
