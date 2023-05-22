@@ -1,23 +1,8 @@
-{ lib
-, stdenv
-, fetchurl
-, alsaLib
-, dbus
-, ffmpeg
-, libGL
-, libpulseaudio
-, libva
-, openssl
-, udev
-, xorg
-, wayland
-, curl
-, libjpeg
-, libpng
-, libXfixes
+{ lib , stdenv , fetchurl , alsaLib , dbus , ffmpeg , libGL , libpulseaudio
+, libva , jq , openssl , runCommand , udev , xorg , wayland
 }:
 
-stdenv.mkDerivation {
+stdenv.mkDerivation rec {
   pname = "parsec";
   version = "2021-01-12";
 
@@ -34,38 +19,27 @@ stdenv.mkDerivation {
     url = "https://builds.parsecgaming.com/channel/release/appdata/linux/latest";
     sha256 = "1wrzdmwp84lscmlqipdvi10l7lnisfpnrdyjg24zipkqp0rdgspa";
   };
-  latest_parsecd_so = fetchurl {
-    url = "https://builds.parsecgaming.com/channel/release/binary/linux/gz/parsecd-150-87.so";
+
+  latest_parsecd_so = runCommand "latest_parsecd_so" { } ''
+    cat ${latest_appdata} | ${jq}/bin/jq --raw-output .so_name | tee $out
+  '';
+
+  parsecd_so = fetchurl {
+    url = "https://builds.parsecgaming.com/channel/release/binary/linux/gz/${builtins.readFile latest_parsecd_so}";
     sha256 = "0xfjzagdp80cvn30gd8v5jp87ba83lqcjcc5kqwm6jdi6vxagp0q";
   };
 
   postPatch = ''
     cp $latest_appdata usr/share/parsec/skel/appdata.json
-    cp $latest_parsecd_so usr/share/parsec/skel/parsecd-150-87.so
+    cp $parsecd_so usr/share/parsec/skel/${builtins.readFile latest_parsecd_so}
   '';
 
   runtimeDependencies = [
-    curl
-    alsaLib
-    (lib.getLib dbus)
-    libGL
-    libpulseaudio
-    libva.out
-    (lib.getLib openssl)
-    (lib.getLib stdenv.cc.cc)
-    (lib.getLib udev)
-    xorg.libX11
-    xorg.libXcursor
-    xorg.libXi
-    xorg.libXinerama
-    xorg.libXrandr
-    xorg.libXScrnSaver
-    wayland
-    (lib.getLib ffmpeg)
-    (lib.getLib curl)
-    (lib.getLib libpng)
-    (lib.getLib libjpeg)
-    (lib.getLib libXfixes)
+    curl alsaLib (lib.getLib dbus) libGL libpulseaudio libva.out
+    (lib.getLib openssl) (lib.getLib stdenv.cc.cc) (lib.getLib udev)
+    xorg.libX11 xorg.libXcursor xorg.libXi xorg.libXinerama xorg.libXrandr
+    xorg.libXScrnSaver wayland (lib.getLib ffmpeg) (lib.getLib curl)
+    (lib.getLib libpng) (lib.getLib libjpeg) (lib.getLib libXfixes)
   ];
 
   unpackPhase = ''
