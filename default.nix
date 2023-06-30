@@ -1,6 +1,5 @@
-{ lib , stdenv , fetchurl , alsaLib , dbus , ffmpeg , libGL , libpulseaudio
-, libva , jq , openssl , runCommand , udev , xorg , wayland
-}:
+{ lib, stdenv, fetchurl, alsaLib, dbus, ffmpeg_4, libGL, libpulseaudio, libva
+, jq, openssl, runCommand, udev, xorg, wayland }:
 
 stdenv.mkDerivation rec {
   pname = "parsec";
@@ -35,11 +34,10 @@ stdenv.mkDerivation rec {
   '';
 
   runtimeDependencies = [
-    curl alsaLib (lib.getLib dbus) libGL libpulseaudio libva.out
+    alsaLib (lib.getLib dbus) libGL libpulseaudio libva.out
     (lib.getLib openssl) (lib.getLib stdenv.cc.cc) (lib.getLib udev)
     xorg.libX11 xorg.libXcursor xorg.libXi xorg.libXinerama xorg.libXrandr
-    xorg.libXScrnSaver wayland (lib.getLib ffmpeg) (lib.getLib curl)
-    (lib.getLib libpng) (lib.getLib libjpeg) (lib.getLib libXfixes)
+    xorg.libXScrnSaver wayland (lib.getLib ffmpeg_4)
   ];
 
   unpackPhase = ''
