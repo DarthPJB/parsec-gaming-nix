@@ -19,8 +19,8 @@ stdenv.mkDerivation {
     sha256 = "1wrzdmwp84lscmlqipdvi10l7lnisfpnrdyjg24zipkqp0rdgspa";
   };
   latest_parsecd_so = fetchurl {
-    url ="https://builds.parsecgaming.com/channel/release/binary/linux/gz/parsecd-150-86e.so";
-    sha256 = "0isxcyzlsj0ff2h6lwf3splf7wihmqnzk77n2qr48d9yvfm67rmh";
+    url ="https://builds.parsecgaming.com/channel/release/binary/linux/gz/parsecd-150-90c.so";
+    sha256 = "10cbqxh4qqi63acds980ijq26y3nbqr8i2npagmlnbdfa20nknmd";
   };
 
   postPatch = ''
