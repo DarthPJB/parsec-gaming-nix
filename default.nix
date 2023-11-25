@@ -1,13 +1,13 @@
-{ lib, stdenv, fetchurl, alsaLib, dbus, ffmpeg, libGL, libpulseaudio, libva
-, openssl, udev, xorg, wayland, curl, libjpeg, libpng,  libXfixes }:
+{ lib, stdenv, fetchurl, alsaLib, curl, dbus, ffmpeg_4, libGL, libpulseaudio,
+  libpng, libva, jq, openssl, runCommand, udev, xorg, wayland }:
 
-stdenv.mkDerivation {
+stdenv.mkDerivation rec {
   pname = "parsec";
-  version = "2021-01-12";
+  version = "150-90c";
 
   src = fetchurl {
     url = "https://builds.parsecgaming.com/package/parsec-linux.deb";
-    sha256 = "1gak01lxbi88zddvywkapvqwxk6a7xyqlfdcix0f57k0n2brsm5c";
+    sha256 = "sha256-rFSdl7BgnuJAj6w5in0/yszO8b5qcr9b+wjF1WkAU70=";
   };
 
   # The upstream deb package is out of date and doesn't work out of the box
@@ -16,24 +16,40 @@ stdenv.mkDerivation {
   # fetch the latest binaries.
   latest_appdata = fetchurl {
     url = "https://builds.parsecgaming.com/channel/release/appdata/linux/latest";
-    sha256 = "1wrzdmwp84lscmlqipdvi10l7lnisfpnrdyjg24zipkqp0rdgspa";
+    sha256 = "sha256-6urXMrh43viJeNK3bK/T0dJDQYi73YhpZZoSdHltP/M=";
   };
-  latest_parsecd_so = fetchurl {
-    url ="https://builds.parsecgaming.com/channel/release/binary/linux/gz/parsecd-150-90c.so";
-    sha256 = "10cbqxh4qqi63acds980ijq26y3nbqr8i2npagmlnbdfa20nknmd";
+
+  latest_parsecd_so = runCommand "latest_parsecd_so" { } ''
+    cat ${latest_appdata} | ${jq}/bin/jq --raw-output .so_name | tee $out
+  '';
+
+  parsecd_so = fetchurl {
+    url = "https://builds.parsecgaming.com/channel/release/binary/linux/gz/${builtins.readFile latest_parsecd_so}";
+    sha256 = "sha256-rdppgVCuLUvrU9eKiDJedngjsIwAJd2YGiZiTGDHi4E=";
   };
 
   postPatch = ''
     cp $latest_appdata usr/share/parsec/skel/appdata.json
-    cp $latest_parsecd_so usr/share/parsec/skel/parsecd-150-85c.so
+    cp $parsecd_so usr/share/parsec/skel/${builtins.readFile latest_parsecd_so}
   '';
 
+  libjpeg8 = stdenv.mkDerivation (finalAttrs: {
+    pname = "libjpeg";
+    version = "8";
+
+    src = fetchurl {
+      url = "http://www.ijg.org/files/jpegsrc.v8.tar.gz";
+      sha256 = "sha256-F7qlt6yz8PjRXXPdJBbLk5ilWzM0pak1nSeNjealC6w=";
+    };
+
+    outputs = [ "out" "lib" ];
+  });
+
   runtimeDependencies = [
-    curl alsaLib (lib.getLib dbus) libGL libpulseaudio libva.out
-    (lib.getLib openssl) (lib.getLib stdenv.cc.cc) (lib.getLib udev)
-    xorg.libX11 xorg.libXcursor xorg.libXi xorg.libXinerama xorg.libXrandr
-    xorg.libXScrnSaver wayland (lib.getLib ffmpeg) (lib.getLib curl) (lib.getLib libpng) 
-    (lib.getLib libjpeg) (lib.getLib libXfixes)
+    alsaLib (lib.getLib dbus) (lib.getLib curl) (lib.getLib libjpeg8.lib)
+    libGL libpulseaudio libpng libva (lib.getLib openssl) (lib.getLib stdenv.cc.cc)
+    (lib.getLib udev) xorg.libX11 xorg.libXcursor xorg.libXfixes xorg.libXi xorg.libXinerama
+    xorg.libXrandr xorg.libXScrnSaver wayland (lib.getLib ffmpeg_4)
   ];
 
   unpackPhase = ''
