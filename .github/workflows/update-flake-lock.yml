@@ -1,0 +1,37 @@
+name: Update flake.lock
+
+on:
+    workflow_dispatch:
+    schedule:
+        - cron: '0 0 * * 0'
+
+jobs:
+    update-flake-lock:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Set up Nix
+              uses: cachix/install-nix-action@v31
+              with:
+                  extra_nix_config: |
+                      experimental-features = nix-command flakes
+            - name: Update flake.lock
+              run: nix flake update parsecDeb parsecMeta
+            - name: Commit and push changes
+              run: |
+                # Check if there are changes to commit
+                if [[ -n $(git status --porcelain) ]]; then
+                    git config --global user.name 'github-actions'
+                    git config --global user.email 'github-actions@github.com'
+                    branch_name="update-flake-lock-$(date +'%Y-%m-%d')"
+                    git checkout -b "$branch_name"
+                    git add flake.lock
+                    git commit -m "Update flake.lock on $(date +'%Y-%m-%d')"
+                    git push origin "$branch_name"
+                    git checkout main
+                    git merge "$branch_name" --no-ff -m "Merge branch '$branch_name' into main"
+                else
+                    echo "No changes to commit."
+                fi
