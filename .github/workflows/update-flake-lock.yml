@@ -26,7 +26,7 @@ jobs:
                 if [[ -n $(git status --porcelain) ]]; then
                     git config --global user.name 'github-actions'
                     git config --global user.email 'github-actions@github.com'
-                    branch_name="update-flake-lock-$(date +'%Y-%m-%d')"
+                    branch_name="update-flake-lock-$(date +'%Y-%m-%d-%H-%M-%S')"
                     original_branch=$(git rev-parse --abbrev-ref HEAD)
                     git checkout -b "$branch_name"
                     git add flake.lock
