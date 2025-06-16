@@ -11,6 +11,13 @@ jobs:
         steps:
             - name: Checkout repository
               uses: actions/checkout@v4
+            
+            - name: Stop if not on main branch
+              run: |
+                if [[ "$(git rev-parse --abbrev-ref HEAD)" != "main" ]]; then
+                    echo "This workflow only runs on the main branch."
+                    exit 0
+                fi
 
             - name: Set up Nix
               uses: cachix/install-nix-action@v31
