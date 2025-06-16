@@ -34,6 +34,7 @@ jobs:
                     git push origin "$branch_name"
                     git checkout "$original_branch"
                     git merge "$branch_name" --no-ff -m "Merge branch '$branch_name' into '$original_branch'"
+                    git push origin "$original_branch"
                 else
                     echo "No changes to commit."
                 fi
