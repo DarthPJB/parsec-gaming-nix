@@ -31,7 +31,7 @@
     "parsecMeta": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-lP2Mc0/gVWM6X/79/xB0ncMj5vXUjtk+QTVC/z9/MaQ=",
+        "narHash": "sha256-WJpGY0sPzJDodhjtvDsZcsVF78w1mzKIFdOeNaUwCKw=",
         "type": "file",
         "url": "https://builds.parsecgaming.com/channel/release/appdata/linux/latest"
       },
