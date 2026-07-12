@@ -19,7 +19,7 @@
     "parsecDeb": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-+sNEGgb2wARM8JDf3Gdzk+N/IFNERlEQJFROGQGP8XE=",
+        "narHash": "sha256-/vdEJeyo8wibEOpMYaI4RzjGSVcE4mB+8I66pWN2s8U=",
         "type": "file",
         "url": "https://builds.parsecgaming.com/package/parsec-linux.deb"
       },
@@ -31,7 +31,7 @@
     "parsecMeta": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-HQhIa2A5e21sjVSZEk5OsPt5C6RDBxqi7NpiNP0JZIM=",
+        "narHash": "sha256-MaBaAcuriCHa1NEfGsGLQS3cNgA2+CtBaIW850f3Wm8=",
         "type": "file",
         "url": "https://builds.parsecgaming.com/channel/release/appdata/linux/latest"
       },
