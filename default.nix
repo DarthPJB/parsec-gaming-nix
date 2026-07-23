@@ -1,5 +1,5 @@
 { lib, stdenv, fetchurl, alsa-lib, curl, dbus, ffmpeg_4, libGL, libpulseaudio,
-  libpng, libva, jq, openssl, runCommand, udev, xxd, xorg, wayland, parsecDeb, parsecMeta }:
+  libpng, libva, jq, openssl, runCommand, udev, xxd, xorg, wayland, zstd, parsecDeb, parsecMeta }:
 
 let
   parsecdSoName = builtins.readFile ( runCommand "latest_parsecd_so" { } ''
@@ -51,8 +51,9 @@ let
     xorg.libXrandr xorg.libXScrnSaver wayland (lib.getLib ffmpeg_4)
   ];
 
+  nativeBuildInputs = [ zstd ];
   unpackPhase = ''
-    ar p "$src" data.tar.xz | tar xJ
+    ar p "$src" data.tar.zst | tar --zstd -xf -
   '';
 
   installPhase = ''
